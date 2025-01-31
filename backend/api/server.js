@@ -6,7 +6,12 @@ const cors = require("cors");
 const app = express();
 const port = 5000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:8080",
+    "https://todo-task-journal.vercel.app"
+  })
+);
 
 app.use(express.json());
 
