@@ -33,6 +33,7 @@ const saveTasks = (tasks) => {
 
 // ✅ Route Health Check
 app.get("/api/health", (req, res) => {
+  console.log("Health check hit! ✅");
   res.status(200).json({ status: "API is running smoothly 🚀" });
 });
 
