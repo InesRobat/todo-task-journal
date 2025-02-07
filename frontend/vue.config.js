@@ -3,6 +3,6 @@ const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   transpileDependencies: true,
   outputDir: "frontend/dist",
-  publicPath: "./",
+  publicPath: "/",
   productionSourceMap: false,
 });
