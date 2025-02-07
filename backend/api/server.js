@@ -4,11 +4,11 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
-const port = 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:8080" || "https://todo-task-journal.vercel.app",
+    origin: ["http://localhost:8080", "https://todo-task-journal.vercel.app"],
+    credentials: true,
   })
 );
 
@@ -16,6 +16,7 @@ app.use(express.json());
 
 const tasksFilePath = path.join(__dirname, "../tasks.json");
 
+// Fonction pour récupérer les tâches
 const getTasks = () => {
   if (fs.existsSync(tasksFilePath)) {
     const data = fs.readFileSync(tasksFilePath, "utf8");
@@ -25,16 +26,24 @@ const getTasks = () => {
   }
 };
 
+// Fonction pour sauvegarder les tâches
 const saveTasks = (tasks) => {
   fs.writeFileSync(tasksFilePath, JSON.stringify(tasks, null, 2), "utf8");
 };
 
+// ✅ Route Health Check
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "API is running smoothly 🚀" });
+});
+
+// ✅ Récupérer toutes les tâches
 app.get("/api/tasks", (req, res) => {
   const tasks = getTasks();
   res.status(200).json(tasks);
 });
 
-app.post("/tasks", (req, res) => {
+// ✅ Ajouter une nouvelle tâche
+app.post("/api/tasks", (req, res) => {
   const tasks = getTasks();
   const { name, completed, date } = req.body;
 
@@ -55,6 +64,7 @@ app.post("/tasks", (req, res) => {
   res.status(201).json(newTask);
 });
 
+// ✅ Modifier une tâche existante
 app.put("/api/tasks/:id", (req, res) => {
   const tasks = getTasks();
   const taskIndex = tasks.findIndex(
@@ -72,10 +82,11 @@ app.put("/api/tasks/:id", (req, res) => {
     saveTasks(tasks);
     res.json(tasks[taskIndex]);
   } else {
-    res.status(404).send("Task not found");
+    res.status(404).json({ error: "Task not found" });
   }
 });
 
+// ✅ Supprimer une tâche
 app.delete("/api/tasks/:id", (req, res) => {
   const tasks = getTasks();
   const taskIndex = tasks.findIndex(
@@ -87,10 +98,9 @@ app.delete("/api/tasks/:id", (req, res) => {
     saveTasks(tasks);
     res.status(204).send();
   } else {
-    res.status(404).send("Task not found");
+    res.status(404).json({ error: "Task not found" });
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+// 🚨 Supprime `app.listen(port, ...)` pour Vercel
+module.exports = app;
