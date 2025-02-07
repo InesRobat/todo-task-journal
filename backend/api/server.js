@@ -7,8 +7,12 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:8080", "https://todo-task-journal.vercel.app"],
-    credentials: true,
+    origin: [
+      "http://localhost:8080",
+      "https://todo-task-journal.vercel.app",
+      "http://localhost:3000",
+    ],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -105,3 +109,8 @@ app.delete("/api/tasks/:id", (req, res) => {
 
 // 🚨 Supprime `app.listen(port, ...)` pour Vercel
 module.exports = app;
+
+const port = 5000;
+app.listen(port, () => {
+  console.log(`API running on http://localhost:${port}`);
+});
