@@ -8,8 +8,7 @@ const port = 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:8080",
-    "https://todo-task-journal.vercel.app"
+    origin: "http://localhost:8080" || "https://todo-task-journal.vercel.app",
   })
 );
 
